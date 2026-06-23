@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     tomorrow.setDate(tomorrow.getDate() + 1);
     elements.bookingDate.value = tomorrow.toISOString().split('T')[0];
     elements.bookingDate.min = tomorrow.toISOString().split('T')[0];
+    elements.bookingPatientId.value = '';
 
     // Connect to database and load settings
     try {
