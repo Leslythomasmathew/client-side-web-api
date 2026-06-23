@@ -1,0 +1,659 @@
+/* -------------------------------------------------------------
+ * Your Appointment Stylesheet
+ * Premium White & Sunset Orange Theme
+ * ------------------------------------------------------------- */
+
+:root {
+    --transition-speed: 0.25s;
+    
+    /* Light Theme (White & Orange) - Now DEFAULT */
+    --bg-gradient: linear-gradient(135deg, #ffffff 0%, #fffaf4 50%, #ffeedd 100%);
+    --card-bg: rgba(255, 255, 255, 0.82);
+    --card-border: rgba(249, 115, 22, 0.15);
+    --text-primary: #1e293b;
+    --text-secondary: #ea580c; /* Orange secondary text */
+    --accent-glow: rgba(249, 115, 22, 0.12);
+    --accent-primary: #f97316; /* Sunset Orange */
+    --accent-hover: #ea580c;
+    --accent-teal: #ea580c;
+    --accent-soft: rgba(249, 115, 22, 0.08);
+    --navbar-bg: rgba(255, 255, 255, 0.85);
+    --shadow: 0 10px 30px 0 rgba(249, 115, 22, 0.06);
+    --input-bg: rgba(249, 115, 22, 0.03);
+    --input-focus: #f97316;
+    --danger: #ef4444;
+    --danger-soft: rgba(239, 68, 68, 0.1);
+    --success: #10b981;
+}
+
+[data-theme="dark"] {
+    /* Dark Theme (Charcoal & Neon Orange) */
+    --bg-gradient: linear-gradient(135deg, #0d0906 0%, #1a120c 50%, #2d1e13 100%);
+    --card-bg: rgba(30, 21, 14, 0.5);
+    --card-border: rgba(249, 115, 22, 0.12);
+    --text-primary: #f8fafc;
+    --text-secondary: #fdba74;
+    --accent-glow: rgba(249, 115, 22, 0.16);
+    --accent-primary: #f97316;
+    --accent-hover: #ea580c;
+    --accent-teal: #f97316;
+    --accent-soft: rgba(249, 115, 22, 0.15);
+    --navbar-bg: rgba(20, 14, 9, 0.8);
+    --shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.45);
+    --input-bg: rgba(255, 255, 255, 0.03);
+    --input-focus: #f97316;
+}
+
+/* Reset settings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: var(--bg-gradient);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    transition: background var(--transition-speed), color var(--transition-speed);
+}
+
+/* Navbar styles */
+.navbar {
+    height: 75px;
+    background: var(--navbar-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+}
+
+.brand-icon {
+    color: var(--accent-primary);
+    animation: heartbeat 2.5s infinite ease-in-out;
+}
+
+.nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Icon Buttons controls */
+.icon-btn {
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.icon-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent-primary);
+    transform: translateY(-2px);
+}
+
+.icon-btn.active {
+    background: var(--accent-soft);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.icon-btn i {
+    width: 20px;
+    height: 20px;
+}
+
+/* Centered Layout Workspace */
+.portal-main.centered-layout {
+    max-width: 1400px;
+    width: 100%;
+    margin: 20px auto;
+    padding: 0 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.center-column {
+    max-width: 650px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Cards containers styling */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 28px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: var(--shadow);
+    transition: border-color 0.2s;
+}
+
+.card:hover {
+    border-color: rgba(249, 115, 22, 0.25);
+}
+
+.card-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+    color: var(--text-primary);
+}
+
+.card-title i {
+    width: 22px;
+    height: 22px;
+    color: var(--accent-primary);
+}
+
+/* Dynamic Wizard Forms */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 10px;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.form-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-input, .form-textarea {
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    padding: 12px 16px;
+    outline: none;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.form-input:focus, .form-textarea:focus {
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.form-textarea {
+    height: 100px;
+    resize: none;
+}
+
+/* Price tag display (Rupees Orange) */
+.price-display-wrapper {
+    background: rgba(249, 115, 22, 0.08);
+    border: 1px solid rgba(249, 115, 22, 0.2);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+}
+
+.price-tag {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--accent-primary);
+}
+
+/* Specialty selections tags */
+.specialty-grid {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.specialty-chip {
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    outline: none;
+}
+
+.specialty-chip:hover {
+    border-color: var(--accent-primary);
+}
+
+.specialty-chip.active {
+    background: var(--accent-soft);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+/* Doctor selectors grids */
+.doctor-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.doctor-item-card {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 14px;
+    cursor: pointer;
+    display: flex;
+    gap: 12px;
+    transition: all 0.2s;
+}
+
+.doctor-item-card:hover {
+    border-color: var(--accent-primary);
+    transform: translateY(-2px);
+}
+
+.doctor-item-card.selected {
+    background: var(--accent-soft);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.doc-avatar {
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.doc-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.doc-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.doc-specialty {
+    font-size: 0.8rem;
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
+.doc-sub {
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    opacity: 0.8;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+
+.doc-bio {
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    opacity: 0.7;
+    line-height: 1.4;
+    margin-top: 4px;
+}
+
+/* Slot selection chips */
+.slots-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+.slot-chip {
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.slot-chip:hover {
+    border-color: var(--accent-primary);
+}
+
+.slot-chip.selected {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: white;
+}
+
+.placeholder-text {
+    font-size: 0.8rem;
+    color: var(--text-primary);
+    opacity: 0.6;
+    font-style: italic;
+}
+
+/* Speak/Dictate button styling */
+.icon-btn.text-btn {
+    width: auto;
+    height: auto;
+    padding: 4px 10px;
+    border-radius: 8px;
+    display: flex;
+    gap: 6px;
+    font-size: 0.75rem;
+}
+
+.mic-btn.recording {
+    background: var(--danger);
+    color: white;
+    animation: micPulse 1.2s infinite;
+}
+
+/* Primary actions buttons */
+.action-btn {
+    width: 100%;
+    background: var(--accent-primary);
+    border: none;
+    border-radius: 14px;
+    color: white;
+    padding: 14px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-btn:hover {
+    background: var(--accent-hover);
+    box-shadow: 0 4px 20px rgba(249, 115, 22, 0.4);
+    transform: translateY(-1px);
+}
+
+.action-btn.text-btn {
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+}
+
+.action-btn.text-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent-primary);
+    box-shadow: none;
+}
+
+/* Geolocation button */
+.geo-btn-text {
+    background: transparent;
+    border: none;
+    color: var(--accent-primary);
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.geo-btn-text:hover {
+    text-decoration: underline;
+}
+
+/* Overlay success modals frames */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 10, 5, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    transition: opacity 0.3s;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-content {
+    max-width: 520px;
+    width: 90%;
+    position: relative;
+    padding: 34px;
+    text-align: center;
+    border-color: var(--accent-primary);
+    box-shadow: 0 15px 40px rgba(249, 115, 22, 0.15);
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--text-primary);
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    opacity: 1;
+}
+
+.modal-header-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.success-icon {
+    width: 52px;
+    height: 52px;
+    color: var(--success);
+}
+
+.modal-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.modal-intro {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-primary);
+    opacity: 0.8;
+    margin-bottom: 20px;
+}
+
+/* Receipt summary card inside modal */
+.receipt-summary-block {
+    background: var(--input-bg);
+    border: 1px dashed var(--card-border);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: left;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    -webkit-user-select: none; /* Safari/Chrome */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE10+ */
+    user-select: none;         /* Standard */
+    pointer-events: none;      /* Disables click triggers entirely */
+}
+
+.receipt-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    border-bottom: 1px solid rgba(249, 115, 22, 0.05);
+    padding-bottom: 6px;
+}
+
+.receipt-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.receipt-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    opacity: 0.6;
+}
+
+.receipt-value {
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: right;
+}
+
+.modal-footer-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Animations */
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    14% { transform: scale(1.12); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.12); }
+    70% { transform: scale(1); }
+}
+
+@keyframes micPulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+    70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--card-border);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-primary);
+}
+
+/* Media breakpoints queries */
+@media (max-width: 640px) {
+    .navbar {
+        padding: 0 20px;
+    }
+    
+    .portal-main.centered-layout {
+        padding: 0 16px;
+        margin: 20px auto;
+    }
+    
+    .doctor-selector-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Health tip banner styling */
+.health-tip-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--input-bg);
+    border-top: 1px solid var(--card-border);
+    padding: 16px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-top: 30px;
+    width: 100%;
+}
+
+.tip-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--accent-primary);
+}

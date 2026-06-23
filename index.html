@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Appointment - Medical Booking Portal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons for clean symbols -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css?v=3">
+    <!-- jsPDF for view-only PDF receipt generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="db.js"></script>
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Main Navbar -->
+        <header class="navbar">
+            <div class="nav-brand">
+                <i data-lucide="heart-pulse" class="brand-icon"></i>
+                <span>Your Appointment</span>
+            </div>
+            
+            <div class="nav-controls">
+                <div id="geo-status-card">
+                    <button id="geo-locate-btn" class="geo-btn-text">
+                        <i data-lucide="map-pin"></i>
+                        <span>Find Pharmacies</span>
+                    </button>
+                </div>
+                
+                <button id="noti-toggle-btn" class="icon-btn" title="Enable reminders & alerts">
+                    <i data-lucide="bell-off" id="noti-icon"></i>
+                </button>
+
+                <button id="theme-toggle" class="icon-btn" title="Switch layout colors">
+                    <i data-lucide="sun" id="theme-icon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Centered Booking Workspace -->
+        <main class="portal-main centered-layout">
+            <div class="center-column">
+                
+                <!-- Doctor Scheduling Card -->
+                <section class="card booking-card">
+                    <h2 class="card-title">
+                        <i data-lucide="calendar-plus"></i>
+                        <span>Book a Visit</span>
+                    </h2>
+                    
+                    <div class="wizard-container">
+                        <!-- Step 1: Filter Specialty -->
+                        <div class="form-group">
+                            <label class="form-label">Choose Department</label>
+                            <div class="specialty-grid" id="specialty-selector">
+                                <button class="specialty-chip active" data-specialty="General Medicine">General Medicine</button>
+                                <button class="specialty-chip" data-specialty="Pediatrics">Pediatrics</button>
+                                <button class="specialty-chip" data-specialty="Cardiology">Cardiology</button>
+                                <button class="specialty-chip" data-specialty="Dermatology">Dermatology</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Choose Doctor -->
+                        <div class="form-group">
+                            <label class="form-label">Available Doctors</label>
+                            <div class="doctor-selector-grid" id="doctor-list">
+                                <!-- Loaded by app.js -->
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Date & Hours selection -->
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="booking-date">Date</label>
+                                <input type="date" id="booking-date" class="form-input">
+                            </div>
+                            <div class="form-group flex-1">
+                                <label class="form-label">Time Slots</label>
+                                <div class="slots-container" id="slots-list">
+                                    <span class="placeholder-text">Select a doctor to view timings...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Patient ID entry & Consultation Price tag (Rupees) -->
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="booking-patient-id">Patient ID (Numbers Only)</label>
+                                <input type="text" id="booking-patient-id" class="form-input" placeholder="E.g., 2400000" pattern="[0-9]*" inputmode="numeric">
+                            </div>
+                            <div class="form-group flex-1">
+                                <label class="form-label">Consultation Fee</label>
+                                <div class="price-display-wrapper">
+                                    <span id="booking-price-tag" class="price-tag">₹100.00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Symptom entry (Voice / Typing) -->
+                        <div class="form-group">
+                            <label class="form-label" for="symptom-notes">
+                                <span>Briefly describe symptoms (or say it aloud)</span>
+                                <button id="dictate-btn" class="icon-btn text-btn mic-btn">
+                                    <i data-lucide="mic"></i>
+                                    <span>Dictate</span>
+                                </button>
+                            </label>
+                            <textarea id="symptom-notes" class="form-textarea" placeholder="E.g., feeling dizzy, general headache..."></textarea>
+                        </div>
+
+                        <button id="book-btn" class="action-btn">
+                            <i data-lucide="check-circle"></i>
+                            <span>Schedule Appointment</span>
+                        </button>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Booking Confirmation Popup Modal -->
+    <div id="receipt-modal" class="modal-overlay hidden">
+        <div class="modal-content card">
+            <button id="close-modal-btn" class="close-btn">&times;</button>
+            
+            <div class="modal-header-success">
+                <i data-lucide="check-circle" class="success-icon"></i>
+                <h3 class="modal-title">Booking Confirmed!</h3>
+            </div>
+            
+            <p class="modal-intro">Your appointment has been successfully scheduled. Please download your receipt below for your records.</p>
+            
+            <div id="receipt-summary" class="receipt-summary-block">
+                <!-- Injected dynamically by app.js -->
+            </div>
+            
+            <div class="modal-footer-actions">
+                <button id="download-receipt-btn" class="action-btn">
+                    <i data-lucide="download"></i>
+                    <span>Download Receipt</span>
+                </button>
+                <button id="close-receipt-btn" class="action-btn text-btn">
+                    <span>Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Health Tip Banner (Third-Party API Fetch) -->
+    <footer class="health-tip-banner">
+        <i data-lucide="sparkles" class="tip-icon"></i>
+        <span id="health-tip-text">Fetching today's wellness tip...</span>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
