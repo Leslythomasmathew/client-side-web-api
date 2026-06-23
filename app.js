@@ -1,20 +1,17 @@
-// Main application controller for the Your Appointment booking portal.
-// This handles form queries, speech inputs, Geolocation, and booking receipt modals.
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Current application state
     const state = {
-        theme: 'light', // Default is now light theme
+        theme: 'light', 
         doctors: [],
         selectedSpecialty: 'General Medicine',
         selectedDoctorId: null,
         selectedSlot: null,
         coords: null,
         notificationPermission: 'default',
-        lastBookedAppt: null // Holds receipt reference for downloads
+        lastBookedAppt: null 
     };
 
-    // Grab all DOM nodes
+   
     const elements = {
         themeToggle: document.getElementById('theme-toggle'),
         themeIcon: document.getElementById('theme-icon'),
@@ -34,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         geoLocateBtn: document.getElementById('geo-locate-btn'),
         geoStatusCard: document.getElementById('geo-status-card'),
         
-        // Confirmation modal elements
+       
         receiptModal: document.getElementById('receipt-modal'),
         closeModalBtn: document.getElementById('close-modal-btn'),
         receiptSummary: document.getElementById('receipt-summary'),
@@ -42,29 +39,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         closeReceiptBtn: document.getElementById('close-receipt-btn')
     };
 
-    // Set default booking date to tomorrow
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     elements.bookingDate.value = tomorrow.toISOString().split('T')[0];
     elements.bookingDate.min = tomorrow.toISOString().split('T')[0];
     elements.bookingPatientId.value = '';
 
-    // Connect to database and load settings
     try {
         await window.apptDb.init();
         loadSettings();
         
-        // Fetch values
+        
         state.doctors = await window.apptDb.getDoctors();
         renderDoctors();
         
-        // Fetch third-party daily health tip
+       
         fetchDailyHealthTip();
     } catch (e) {
         console.error('Error starting database systems:', e);
     }
 
-    // Queries third-party Advice Slip API for a daily motivation slip
+    
     async function fetchDailyHealthTip() {
         try {
             const res = await fetch('https://api.adviceslip.com/advice');
@@ -77,7 +72,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // Load user settings from LocalStorage
+    
     function loadSettings() {
         const storedTheme = localStorage.getItem('ya-theme') || 'light';
         state.theme = storedTheme;
@@ -85,7 +80,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateThemeIcon();
     }
 
-    // Swaps the sun/moon icon on the theme button
+  
     function updateThemeIcon() {
         if (state.theme === 'light') {
             elements.themeIcon.setAttribute('data-lucide', 'moon');
@@ -95,7 +90,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         lucide.createIcons();
     }
 
-    // Theme toggle button click handler
+  
     elements.themeToggle.addEventListener('click', () => {
         state.theme = state.theme === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', state.theme);
@@ -103,7 +98,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         localStorage.setItem('ya-theme', state.theme);
     });
 
-    // Check notification permissions and update toggle UI icon
+    
     function syncNotificationStatus() {
         if (!("Notification" in window)) {
             elements.notiToggleBtn.style.display = 'none';
@@ -121,7 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         lucide.createIcons();
     }
 
-    // Prompt user for notification access
+   
     elements.notiToggleBtn.addEventListener('click', async () => {
         if (!("Notification" in window)) return;
 
@@ -136,7 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Fire standard system notification
+  
     function fireNotification(title, body) {
         if (state.notificationPermission === 'granted') {
             new Notification(title, {
@@ -148,7 +143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     syncNotificationStatus();
 
-    // Geolocation pharmacy locator
+  
     elements.geoLocateBtn.addEventListener('click', () => {
         if (!navigator.geolocation) {
             alert('Your browser does not support geolocation details.');
@@ -179,7 +174,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         );
     });
 
-    // Render list of doctors filtered by chosen specialty
+    
     function renderDoctors() {
         elements.doctorList.innerHTML = '';
         state.selectedDoctorId = null;
@@ -219,7 +214,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Render time slot selection chips
+
     function renderSlots(slots) {
         elements.slotsList.innerHTML = '';
         state.selectedSlot = null;
@@ -244,7 +239,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Handles changes to specialty selections
+    
     elements.specialtySelector.addEventListener('click', (e) => {
         const btn = e.target.closest('.specialty-chip');
         if (!btn) return;
@@ -256,7 +251,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderDoctors();
     });
 
-    // Voice dictation of symptom description (Speech-to-Text)
+  
     function initSpeechRecognition() {
         const SpeechRecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognitionClass) {
@@ -303,7 +298,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     initSpeechRecognition();
 
-    // Confirm booking event handler
+   
     elements.bookBtn.addEventListener('click', async () => {
         const patientId = elements.bookingPatientId.value.trim();
         if (!patientId) {
@@ -311,7 +306,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Validate that Patient ID is numeric-only (digits only, e.g. 2400000)
         const isDigits = /^\d+$/.test(patientId);
         if (!isDigits) {
             alert('Please enter a valid Patient ID using numbers only (e.g. 2400000).');
@@ -353,19 +347,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             await window.apptDb.bookAppointment(appointment);
             
 
-            // Send system prompt alert
+            
             fireNotification(
                 'Visit Booked Successfully', 
                 `Your appointment with ${doctor.name} (₹100) is scheduled on ${dateVal} at ${state.selectedSlot}.`
             );
 
-            // Save reference to state
+           
             state.lastBookedAppt = appointment;
 
-            // Render modal receipt card details
+            
             displayReceiptModal(appointment);
 
-            // Clean inputs
+            
             elements.symptomNotes.value = '';
             elements.bookingPatientId.value = ''; // Reset patient ID box for the next booking
             document.querySelectorAll('.doctor-item-card').forEach(c => c.classList.remove('selected'));
@@ -379,7 +373,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Populate receipt template elements and show modal
+   
     function displayReceiptModal(appt) {
         elements.receiptSummary.innerHTML = `
             <div class="receipt-row">
@@ -411,7 +405,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         elements.receiptModal.classList.remove('hidden');
     }
 
-    // Modal Action listeners (Download Receipt & Close)
+   
     elements.downloadReceiptBtn.addEventListener('click', () => {
         if (!state.lastBookedAppt) return;
         triggerReceiptDownload(state.lastBookedAppt);
@@ -419,15 +413,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function triggerReceiptDownload(appt) {
         const { jsPDF } = window.jspdf;
-        // Create a compact A6 receipt document
+       
         const doc = new jsPDF({
             orientation: 'portrait',
             unit: 'mm',
             format: 'a6'
         });
 
-        // 1. Draw a neat header branding bar
-        doc.setFillColor(249, 115, 22); // Sunset Orange
+      
+        doc.setFillColor(249, 115, 22); 
         doc.rect(0, 0, 105, 16, 'F');
         
         doc.setTextColor(255, 255, 255);
@@ -475,23 +469,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         doc.setFont("Helvetica", "bold");
         doc.text("Symptoms/Notes:", 10, 68);
         doc.setFont("Helvetica", "normal");
-        // Handle multiline symptom notes nicely
+       
         const splitNotes = doc.splitTextToSize(appt.notes || 'Routine checkup', 50);
         doc.text(splitNotes, 42, 68);
 
-        // 3. Draw a separator line
         doc.setDrawColor(226, 232, 240);
         doc.setLineWidth(0.3);
         doc.line(10, 88, 95, 88);
 
-        // 4. Footer greetings
+        
         doc.setFont("Helvetica", "italic");
         doc.setFontSize(7);
         doc.setTextColor(100, 116, 139);
         doc.text("This receipt is a dynamically generated view-only record.", 52.5, 93, { align: 'center' });
         doc.text("Thank you for scheduling with Your Appointment!", 52.5, 96, { align: 'center' });
 
-        // Save PDF file to disk
+        
         doc.save(`Receipt-${appt.patientId}-${appt.date}.pdf`);
     }
 
